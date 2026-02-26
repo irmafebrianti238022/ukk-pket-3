@@ -16,7 +16,7 @@
             <div class="card border-0 shadow-lg overflow-hidden" style="border-radius: 1.5rem;">
                 
                 <div class="card-header bg-primary bg-gradient text-white text-center py-5 border-0 position-relative">
-                    <h3 class="fw-bold mb-1">admin</h3>
+                    <h3 class="fw-bold mb-1">Administrator</h3>
                     <p class="small mb-0 opacity-75">Control Panel Access</p>
                     
                     <div class="position-absolute start-50 translate-middle-x bg-white text-primary rounded-4 shadow d-flex align-items-center justify-content-center" 
