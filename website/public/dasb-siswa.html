@@ -1,0 +1,45 @@
+
+<div class="main-content p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Kelola Siswa</h3>
+            <p class="text-muted">Manajemen data peserta didik pengadu aspirasi.</p>
+        </div>
+        <button class="btn btn-primary fw-bold px-4 py-3 rounded-4 shadow" data-bs-toggle="modal" data-bs-target="#modalTambahSiswa">
+            <i class="bi bi-person-plus-fill me-2"></i> Registrasi Siswa
+        </button>
+    </div>
+
+    <div class=" table-container border premium-card overflow-hidden">
+        <table class="table table-hover mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4">Siswa</th>
+                    <th>NIS</th>
+                    <th>Kelas</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="ps-4">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-3 shadow-sm">BS</div>
+                            <div>
+                                <div class="fw-bold text-dark">Budi Setiadi</div>
+                                <small class="text-muted">budi@example.com</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="nis-text">2026001</span></td>
+                    <td><span class="badge-kelas">XII RPL 1</span></td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Hapus kategori ini?')">
+                             <i class="bi bi-trash me-1"></i> Hapus
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
