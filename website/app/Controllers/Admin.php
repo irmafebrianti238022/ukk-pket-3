@@ -13,40 +13,28 @@ class Admin extends BaseController
         $model = new InputAspirasiModel();
         $katModel = new \App\Models\KategoriModel();
 
-        $query = $model->select('input_aspirasi.*, kategori.ket_kategori, siswa.nama, siswa.kelas, aspirasi.status, aspirasi.feedback')
-            ->join('kategori', 'kategori.id_kategori = input_aspirasi.id_kategori')
-            ->join('siswa', 'siswa.nis = input_aspirasi.nis')
-            ->join('aspirasi', 'aspirasi.id_pelaporan = input_aspirasi.id_pelaporan', 'left');
+        // Ambil input filter
+        $filters = [
+            'nis'      => $this->request->getGet('nis'),
+            'kategori' => $this->request->getGet('kategori'),
+            'status'   => $this->request->getGet('status'),
+            'tanggal'  => $this->request->getGet('tanggal'),
+        ];
 
-        // Ambil data dari Form Filter (Method GET)
-        $filter_nis      = $this->request->getGet('nis');
-        $filter_kategori = $this->request->getGet('kategori');
-        $filter_status   = $this->request->getGet('status');
-        $filter_tanggal  = $this->request->getGet('tanggal');
+        // Panggil fungsi dari Model 
+        $data['laporan'] = $model->getFilteredData(
+            $filters['nis'],
+            $filters['kategori'],
+            $filters['status'],
+            $filters['tanggal']
+        )->paginate(10, 'laporan');
 
-
-        // Tambahkan kondisi jika filter diisi
-        if ($filter_nis)      $query->where('input_aspirasi.nis', $filter_nis);
-        if ($filter_kategori) $query->where('input_aspirasi.id_kategori', $filter_kategori);
-        if ($filter_tanggal)  $query->where('DATE(input_aspirasi.created_at)', $filter_tanggal);
-        if ($filter_status) {
-            if ($filter_status == 'Menunggu') {
-                $query->groupStart()
-                    ->where('aspirasi.status', null)
-                    ->orWhere('aspirasi.status', 'Menunggu')
-                    ->groupEnd();
-            } else {
-                $query->where('aspirasi.status', $filter_status);
-            }
-        }
-
-        $data['laporan']  = $query->orderBy('input_aspirasi.created_at', 'DESC')->paginate(10, 'laporan');
         $data['pager']    = $model->pager;
         $data['kategori'] = $katModel->findAll();
-        $data['title'] = "Dashboard Admin";
+        $data['title']    = "Dashboard Admin";
 
-        $currentPage = $this->request->getVar('page_laporan') ? $this->request->getVar('page_laporan') : 1;
-        $data['nomor'] = 1 + (10 * ($currentPage - 1));
+        $currentPage    = $this->request->getVar('page_laporan') ?: 1;
+        $data['nomor']  = 1 + (10 * ($currentPage - 1));
 
         return view('admin/dashboard', $data);
     }
@@ -54,14 +42,13 @@ class Admin extends BaseController
     // TANGGAPAN ADMIN
     public function tanggapan($id_pelaporan)
     {
-        $inputModel = new InputAspirasiModel();
+        $model = new InputAspirasiModel();
 
-        // Ambil detail laporan berdasarkan ID
-        $data['laporan'] = $inputModel->select('input_aspirasi.*, kategori.ket_kategori, siswa.kelas')
-            ->join('kategori', 'kategori.id_kategori = input_aspirasi.id_kategori')
-            ->join('siswa', 'siswa.nis = input_aspirasi.nis')
-            ->where('id_pelaporan', $id_pelaporan)
-            ->first();
+        $data['laporan'] = $model->getDetailLaporan($id_pelaporan);
+
+        if (!$data['laporan']) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Laporan tidak ditemukan.");
+        }
 
         return view('admin/dashboard', $data);
     }
